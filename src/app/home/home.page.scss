@@ -1,6 +1,5 @@
 #container {
   text-align: center;
-
   position: absolute;
   left: 0;
   right: 0;
@@ -16,12 +15,18 @@
 #container p {
   font-size: 16px;
   line-height: 22px;
-
-  color: #8c8c8c;
-
+  color: #8c8c8c; /* Cambiar el color si deseas que coincida con #fbb41c */
   margin: 0;
 }
 
 #container a {
   text-decoration: none;
+}
+
+.title-color {
+  color: #fbb41c !important; /* Color amarillo para el título */
+}
+
+.icon-color {
+  color: #fbb41c; /* Color amarillo para los íconos */
 }

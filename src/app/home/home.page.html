@@ -1,13 +1,13 @@
 <ion-header [translucent]="false">
   <ion-toolbar class="toolbar-duoc">
-    <ion-title>
+    <ion-title class="title-color"> <!-- Agregamos la clase para el color del título -->
       Register APP
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button routerLink="/sign-in">
+      <ion-button routerLink="/sign-in" class="icon-color"> <!-- Agregamos la clase para el color del ícono -->
         <ion-icon slot="icon-only" name="log-in-outline"></ion-icon>
       </ion-button>
-      <ion-button routerLink="/sign-up">
+      <ion-button routerLink="/sign-up" class="icon-color"> <!-- Agregamos la clase para el color del ícono -->
         <ion-icon slot="icon-only" name="person-add-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -19,7 +19,7 @@
   <!-- Logo Duoc UC grande con texto debajo -->
   <div style="text-align: center; margin-top: 50px;">
     <img src="assets/logo-duoc.png" alt="Logo Duoc UC" style="width: 200px; margin-bottom: 20px;">
-    <p style="font-size: 1.5rem;" routerLink="/sign-in">Scanner QR de Asistencia</p>
+    <p class="title-color" style="font-size: 1.5rem;" routerLink="/qr-scanner">Scanner QR de Asistencia</p>   <!-- Cambiar después por el sign-in -->
   </div>
 
   <!-- Imagen del guitarrista de Metallica -->
