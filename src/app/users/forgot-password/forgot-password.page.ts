@@ -12,9 +12,10 @@ export class ForgotPasswordPage {
   constructor(private authService: AuthService) {}
 
   // Maneja el restablecimiento de la contraseña
-  onResetPassword(email: string) {
-    if (email) {
-      this.authService.resetPassword(email)
+  onResetPassword(email: any) {
+    const emailValue = email ? email.toString().trim() : ''; // Convertir a string y eliminar espacios
+    if (emailValue) {
+      this.authService.resetPassword(emailValue)
         .then(() => {
           this.message = 'Se ha enviado un enlace de restablecimiento de contraseña a tu correo (simulado).';
         })
@@ -22,7 +23,7 @@ export class ForgotPasswordPage {
           this.message = 'Error: ' + error;
         });
     } else {
-      this.message = 'Por favor, ingresa un correo electrónico.';
+      this.message = 'Por favor, ingresa un correo electrónico válido.';
     }
   }
 }
