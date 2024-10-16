@@ -11,6 +11,46 @@ const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
+  {
+    path: 'verify-email',
+    loadChildren: () => import('./verify-email/verify-email.module').then(m => m.VerifyEmailPageModule)
+  },
+  {
+    path: 'forgot-password',
+    loadChildren: () => import('./users/forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
+  },
+  {
+    path: 'profile',
+    loadChildren: () => import('./users/profile/profile.module').then( m => m.ProfilePageModule)
+  },
+  {
+    path: 'sign-in',
+    loadChildren: () => import('./users/sign-in/sign-in.module').then( m => m.SignInPageModule)
+  },
+  {
+    path: 'sign-up',
+    loadChildren: () => import('./users/sign-up/sign-up.module').then( m => m.SignUpPageModule)
+  },
+  {
+    path: 'forgot-password',
+    loadChildren: () => import('./users/forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
+  },
+  {
+    path: 'profile',
+    loadChildren: () => import('./users/profile/profile.module').then( m => m.ProfilePageModule)
+  },
+  {
+    path: 'sign-in',
+    loadChildren: () => import('./users/sign-in/sign-in.module').then( m => m.SignInPageModule)
+  },
+  {
+    path: 'sign-up',
+    loadChildren: () => import('./users/sign-up/sign-up.module').then( m => m.SignUpPageModule)
+  },
+  {
+    path: 'verify-email',
+    loadChildren: () => import('./verify-email/verify-email.module').then( m => m.VerifyEmailPageModule)
+  }
 ];
 
 @NgModule({

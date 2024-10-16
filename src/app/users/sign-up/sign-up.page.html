@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Registrar Usuario</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding" keyboard-resize="true">
+  <form (ngSubmit)="onRegister()">
+    <ion-item lines="full">
+      <ion-label position="floating">Email</ion-label>
+      <ion-input type="email" [(ngModel)]="email" name="email" required></ion-input>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-label position="floating">Contraseña</ion-label>
+      <ion-input type="password" [(ngModel)]="password" name="password" required></ion-input>
+    </ion-item>
+    <ion-row>
+      <ion-col>
+        <ion-button type="submit" expand="block">Registrar</ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+
+  <ion-row>
+    <ion-col>
+      <p>
+        <a routerLink="/sign-in">¿Ya tienes una cuenta?</a>
+      </p>
+    </ion-col>
+  </ion-row>
+  
+  <!-- Contenedor para el botón de Volver -->
+  <div class="volver-container">
+    <ion-button routerLink="/home" fill="clear">
+      <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      Volver
+    </ion-button>
+  </div>
+</ion-content>
