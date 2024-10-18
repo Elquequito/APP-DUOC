@@ -35,10 +35,11 @@
   <!-- Botón de retroceso para volver a la página principal -->
   <ion-row class="ion-justify-content-end" style="margin-top: auto;">
     <ion-col>
-      <ion-button routerLink="/profile" fill="clear">
+          <ion-button (click)="goBack()" fill="clear">
         <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
         Volver
       </ion-button>
     </ion-col>
   </ion-row>
+
 </ion-content>

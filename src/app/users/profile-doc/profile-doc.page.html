@@ -65,6 +65,27 @@
     <div style="text-align: center; margin: 10px">
       <ion-button (click)="goToQrGenerator()" color="dark">Generar QR</ion-button>
     </div>
+
+    <!-- Sección de asistencia -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Asistencia Registrada</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item *ngFor="let item of asistencia">
+            <ion-label>
+              <strong>{{ item.fecha }} - {{ item.nombre }}:</strong> 
+              <span style="color: #fbb41c;"> Código: {{ item.codigo }}</span>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+
+        <div *ngIf="asistencia.length === 0" style="text-align: center; color: #8c8c8c;">
+          No hay registros de asistencia.
+        </div>
+      </ion-card-content>
+    </ion-card>
   </div>
   
   <div *ngIf="!user">

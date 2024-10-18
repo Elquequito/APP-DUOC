@@ -34,6 +34,7 @@
             </ion-label>
           </ion-item>
 
+          <!-- Sección de Nombre -->
           <ion-item>
             <ion-label><strong>Nombre: </strong></ion-label>
             <ng-container *ngIf="!isEditingName; else editNameTemplate">
@@ -53,11 +54,32 @@
               </div>
             </ng-template>
           </ion-item>
+
+          <!-- Sección de Sección -->
+          <ion-item>
+            <ion-label><strong>Sección: </strong></ion-label>
+            <ng-container *ngIf="!isEditingSection; else editSectionTemplate">
+              <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <span style="color: #fbb41c;">{{ user.section }}</span>
+                <ion-button *ngIf="!sectionEdited" (click)="enableEditSection()" color="light">Editar</ion-button>
+              </div>
+            </ng-container>
+            <ng-template #editSectionTemplate>
+              <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <ion-input 
+                  [(ngModel)]="editableSection" 
+                  placeholder="Ingresa tu sección" 
+                  class="editable-input"
+                ></ion-input>
+                <ion-button (click)="guardarSection()" color="primary">Guardar</ion-button>
+              </div>
+            </ng-template>
+          </ion-item>
         </ion-list>
 
         <!-- Mensaje de advertencia -->
-        <div *ngIf="isEditingName" style="text-align: center; color: red; margin: 10px;">
-          !!!RECUERDA!!! solo puedes cambiar tu nombre una vez
+        <div *ngIf="isEditingName || isEditingSection" style="text-align: center; color: red; margin: 10px;">
+          !!!RECUERDA!!! solo puedes cambiar tu nombre y sección una vez
         </div>
       </ion-card-content>
     </ion-card>
@@ -65,6 +87,27 @@
     <div style="text-align: center; margin: 10px">
       <ion-button (click)="goToQrScanner()" color="dark">Escanear QR</ion-button>
     </div>
+
+    <!-- Sección de asistencia -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Asistencia</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item *ngFor="let item of asistencia">
+            <ion-label>
+              <strong>{{ item.fecha }}:</strong> 
+              <span style="color: #fbb41c;">{{ item.estado }}</span>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+
+        <div *ngIf="asistencia.length === 0" style="text-align: center; color: #8c8c8c;">
+          No hay registros de asistencia.
+        </div>
+      </ion-card-content>
+    </ion-card>
   </div>
   
   <div *ngIf="!user">
