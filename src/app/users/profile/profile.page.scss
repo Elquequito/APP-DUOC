@@ -1,0 +1,26 @@
+// Cambia el color del texto del input y del placeholder
+.editable-input {
+  color: #fbb41c !important; /* Cambia el color del texto */
+  --background: transparent !important; /* Asegúrate de que el fondo sea transparente */
+  --placeholder-color: rgba(251, 180, 28, 0.5) !important; /* Cambia el color del placeholder */
+}
+
+// Cambia el color del texto del ion-input
+ion-input {
+  color: #fbb41c !important; /* Color del texto del input */
+  --background: transparent !important; /* Fondo transparente */
+}
+
+// Cambia el color del placeholder
+ion-input::ng-deep .placeholder {
+  color: rgba(251, 180, 28, 0.5) !important; /* Color del placeholder */
+}
+
+// Opcional: Si deseas aplicar estilos a los ion-label para el nombre y el correo
+ion-label {
+  color: #fbb41c !important; /* Cambia el color del texto de los labels */
+}
+
+h2 {
+  color: #fbb41c; /* Color para el nombre del usuario en el encabezado */
+}

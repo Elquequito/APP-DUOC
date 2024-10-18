@@ -1,9 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-title class="subtitulo ion-text-wrap">Perfil</ion-title>
-    <ion-buttons slot="start">
-      <ion-button (click)="openMenu()">
-        <ion-icon color="primary" slot="icon-only" name="menu-sharp"></ion-icon>
+
+    <!-- Botón para cerrar sesión a la derecha -->
+    <ion-buttons slot="end">
+      <ion-button (click)="salir()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -12,16 +14,55 @@
 <ion-content>
   <div *ngIf="user">
     <div style="text-align: center; margin: 20px;">
-      <img [src]="user.photoURL || 'assets/default-avatar.png'" alt="Foto de perfil" style="width: 100px; border-radius: 50%;">
-      <h2>{{ user.displayName }}</h2>
-      <h3>{{ user.career }}</h3>
+      <img 
+        [src]="user.photoURL || 'assets/usuario-png.png'" 
+        alt="Foto de perfil" 
+        style="width: 100px; border-radius: 50%;"
+      >
+      <h2 style="color: #fbb41c;">{{ user.displayName }}</h2>
+      <h3 style="color: #8c8c8c;">{{ user.career }}</h3>
     </div>
     
-    <div style="text-align: end; margin: 10px">
-      <ion-button (click)="goToQrScanner()" class="normal" color="dark">Ir al Scanner QR</ion-button>
-      <ion-button (click)="salir()" class="normal" color="dark">Salir</ion-button>
+    <!-- Sección adicional para mostrar información registrada -->
+    <ion-list>
+      <ion-item>
+        <ion-label>
+          <strong>Correo: </strong> 
+          <span style="color: #fbb41c;">{{ user.email }}</span>
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label><strong>Nombre: </strong></ion-label>
+        <ng-container *ngIf="!isEditingName; else editNameTemplate">
+          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <span style="color: #fbb41c;">{{ user.displayName }}</span>
+            <ion-button *ngIf="!nameEdited" (click)="enableEditName()" color="light">Editar</ion-button>
+          </div>
+        </ng-container>
+        <ng-template #editNameTemplate>
+          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <ion-input 
+              [(ngModel)]="editableName" 
+              placeholder="Ingresa tu nombre y apellido" 
+              class="editable-input"
+            ></ion-input>
+            <ion-button (click)="guardarNombre()" color="primary">Guardar</ion-button>
+          </div>
+        </ng-template>
+      </ion-item>
+    </ion-list>
+
+    <!-- Mensaje de advertencia -->
+    <div *ngIf="isEditingName" style="text-align: center; color: red; margin: 10px;">
+      !!!RECUERDA!!! solo puedes cambiar tu nombre una vez
+    </div>
+
+    <div style="text-align: center; margin: 10px">
+      <ion-button (click)="goToQrScanner()" color="dark">Ir al Scanner QR</ion-button>
     </div>
   </div>
+  
   <div *ngIf="!user">
     <p>No se ha encontrado información del usuario.</p>
   </div>

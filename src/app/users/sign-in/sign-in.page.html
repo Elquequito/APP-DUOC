@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Iniciar Sesión</ion-title>
+    <ion-title>Iniciar sesión</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -13,12 +13,18 @@
 
     <ion-item lines="full">
       <ion-label position="floating">Contraseña</ion-label>
-      <ion-input type="password" [(ngModel)]="password" name="password" required></ion-input>
+      <ion-input [type]="passwordType" [(ngModel)]="password" name="password" required></ion-input>
+      <ion-icon
+        name="{{ passwordIcon }}"
+        slot="end"
+        (click)="togglePasswordVisibility()"
+        style="cursor: pointer;">
+      </ion-icon>
     </ion-item>
 
     <ion-row>
       <ion-col>
-        <ion-button type="submit" expand="block" routerLink="/profile">Iniciar sesión</ion-button>
+        <ion-button type="submit" expand="block">Iniciar sesión</ion-button>
       </ion-col>
     </ion-row>
 

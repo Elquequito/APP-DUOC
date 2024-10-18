@@ -4,7 +4,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
   },
   {
     path: '',
@@ -17,43 +17,23 @@ const routes: Routes = [
   },
   {
     path: 'forgot-password',
-    loadChildren: () => import('./users/forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
+    loadChildren: () => import('./users/forgot-password/forgot-password.module').then(m => m.ForgotPasswordPageModule)
   },
   {
     path: 'profile',
-    loadChildren: () => import('./users/profile/profile.module').then( m => m.ProfilePageModule)
+    loadChildren: () => import('./users/profile/profile.module').then(m => m.ProfilePageModule)
   },
   {
     path: 'sign-in',
-    loadChildren: () => import('./users/sign-in/sign-in.module').then( m => m.SignInPageModule)
+    loadChildren: () => import('./users/sign-in/sign-in.module').then(m => m.SignInPageModule)
   },
   {
     path: 'sign-up',
-    loadChildren: () => import('./users/sign-up/sign-up.module').then( m => m.SignUpPageModule)
-  },
-  {
-    path: 'forgot-password',
-    loadChildren: () => import('./users/forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
-  },
-  {
-    path: 'profile',
-    loadChildren: () => import('./users/profile/profile.module').then( m => m.ProfilePageModule)
-  },
-  {
-    path: 'sign-in',
-    loadChildren: () => import('./users/sign-in/sign-in.module').then( m => m.SignInPageModule)
-  },
-  {
-    path: 'sign-up',
-    loadChildren: () => import('./users/sign-up/sign-up.module').then( m => m.SignUpPageModule)
-  },
-  {
-    path: 'verify-email',
-    loadChildren: () => import('./verify-email/verify-email.module').then( m => m.VerifyEmailPageModule)
+    loadChildren: () => import('./users/sign-up/sign-up.module').then(m => m.SignUpPageModule)
   },
   {
     path: 'qr-scanner',
-    loadChildren: () => import('./qr-scanner/qr-scanner.module').then( m => m.QrScannerPageModule)
+    loadChildren: () => import('./qr-scanner/qr-scanner.module').then(m => m.QrScannerPageModule)
   }
 ];
 
