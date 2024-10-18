@@ -1,11 +1,11 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Registrar usuario</ion-title>
+    <ion-title>Inicio docente</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding" keyboard-resize="true">
-  <form (ngSubmit)="onRegister()">
+  <form (ngSubmit)="onLogin()">
     <!-- Campo de Email -->
     <ion-item lines="full">
       <ion-label position="floating">Email</ion-label>
@@ -36,27 +36,18 @@
         style="cursor: pointer;">
       </ion-icon>
     </ion-item>
-    
-    <!-- Botón de Registro -->
+
+    <!-- Botón de Iniciar Sesión -->
     <ion-row>
       <ion-col>
-        <ion-button type="submit" expand="block">Registrar</ion-button>
+        <ion-button type="submit" expand="block">Iniciar sesión</ion-button>
       </ion-col>
     </ion-row>
   </form>
 
-  <!-- Enlace para Iniciar Sesión -->
-  <ion-row>
-    <ion-col>
-      <p>
-        <a routerLink="/sign-in">¿Ya tienes una cuenta?</a>
-      </p>
-    </ion-col>
-  </ion-row>
-  
-  <!-- Botón de Volver -->
-  <div class="volver-container" style="text-align: center; margin-top: 20px;">
-    <ion-button routerLink="/home" fill="clear">
+  <!-- Botón de Volver a la Página de Inicio (parte inferior derecha) -->
+  <div class="volver-container">
+    <ion-button routerLink="/sign-in" fill="clear">
       <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
       Volver
     </ion-button>

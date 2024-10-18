@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title class="subtitulo ion-text-wrap">Perfil</ion-title>
+    <ion-title class="subtitulo ion-text-wrap">Perfil del Docente</ion-title>
 
     <!-- Botón para cerrar sesión a la derecha -->
     <ion-buttons slot="end">
@@ -22,7 +22,7 @@
       <h2 style="color: #fbb41c;">{{ user.displayName }}</h2>
       <h3 style="color: #8c8c8c;">{{ user.career }}</h3>
     </div>
-
+    
     <!-- Contenedor para mostrar información registrada -->
     <ion-card>
       <ion-card-content>
@@ -63,7 +63,7 @@
     </ion-card>
 
     <div style="text-align: center; margin: 10px">
-      <ion-button (click)="goToQrScanner()" color="dark">Escanear QR</ion-button>
+      <ion-button (click)="goToQrGenerator()" color="dark">Generar QR</ion-button>
     </div>
   </div>
   

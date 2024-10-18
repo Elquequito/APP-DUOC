@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="subtitulo ion-text-wrap">Generar Código QR</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div style="text-align: center; margin: 20px;">
+    <ion-input 
+      [(ngModel)]="inputText" 
+      placeholder="Ingresa el texto o URL"
+      style="width: 100%;"
+    ></ion-input>
+    <ion-button (click)="generateQRCode()" color="primary" style="margin-top: 10px;">
+      Generar Código QR
+    </ion-button>
+
+    <div *ngIf="qrCode" style="margin-top: 40px;">
+      <img 
+        [src]="qrCode" 
+        alt="Código QR generado" 
+        style="width: 50%; height: auto;" 
+      />
+    </div>
+  </div>
+</ion-content>

@@ -34,7 +34,21 @@ const routes: Routes = [
   {
     path: 'qr-scanner',
     loadChildren: () => import('./qr-scanner/qr-scanner.module').then(m => m.QrScannerPageModule)
+  },
+  {
+    path: 'inicio-doc',
+    loadChildren: () => import('./users/inicio-doc/inicio-doc.module').then( m => m.InicioDocPageModule)
+  },
+  {
+    path: 'profile-doc',
+    loadChildren: () => import('./users/profile-doc/profile-doc.module').then( m => m.ProfileDocPageModule)
+  },
+  {
+    path: 'generar-qr',
+    loadChildren: () => import('./generar-qr/generar-qr.module').then( m => m.GenerarQrPageModule)
   }
+
+
 ];
 
 @NgModule({
