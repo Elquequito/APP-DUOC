@@ -48,7 +48,6 @@ const routes: Routes = [
     loadChildren: () => import('./generar-qr/generar-qr.module').then( m => m.GenerarQrPageModule)
   }
 
-
 ];
 
 @NgModule({
