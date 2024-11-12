@@ -83,6 +83,6 @@ export class ProfileDocPage implements OnInit {
   }
 
   goToQrGenerator() {
-    this.router.navigate(['/qr-generator']);
-  }
+    this.router.navigate(['/generar-qr']); // Usa '/generar-qr' si esta es la ruta correcta
+  } 
 }

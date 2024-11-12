@@ -45,7 +45,7 @@ const routes: Routes = [
   },
   {
     path: 'generar-qr',
-    loadChildren: () => import('./generar-qr/generar-qr.module').then( m => m.GenerarQrPageModule)
+    loadChildren: () => import('./generar-qr/generar-qr.module').then(m => m.GenerarQrPageModule)
   }
 
 ];
