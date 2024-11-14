@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FirebaseService } from '../../services/firebase.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -7,45 +8,67 @@ import { Router } from '@angular/router';
   styleUrls: ['./sign-in.page.scss'],
 })
 export class SignInPage implements OnInit {
-  email: string = ''; // Propiedad para almacenar el email
-  password: string = ''; // Propiedad para almacenar la contraseña
-  passwordType: string = 'password'; // Tipo de campo de contraseña (por defecto 'password')
-  passwordIcon: string = 'eye-off'; // Ícono de visibilidad (por defecto 'eye-off')
+  email: string = '';
+  password: string = '';
+  passwordType: string = 'password';
+  passwordIcon: string = 'eye-off';
+  emailError: string = ''; // Propiedad para almacenar mensajes de error del email
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private firebaseService: FirebaseService) {}
 
-  ngOnInit() {}
-
-  // Método para alternar la visibilidad de la contraseña
-  togglePasswordVisibility() {
-    if (this.passwordType === 'password') {
-      this.passwordType = 'text'; // Cambiar a texto plano
-      this.passwordIcon = 'eye';  // Cambiar ícono a 'eye' (mostrar)
-    } else {
-      this.passwordType = 'password'; // Cambiar a contraseña oculta
-      this.passwordIcon = 'eye-off';  // Cambiar ícono a 'eye-off' (ocultar)
-    }
+  ngOnInit() {
+    this.loadUserData(); // Cargar datos del usuario al iniciar
   }
 
-  // Método para manejar el inicio de sesión en sign-in
-  onLogin() {
-    console.log('Email:', this.email);
-    console.log('Password:', this.password);
-
-    // Obtener los datos del localStorage
-    const storedUser = localStorage.getItem('user'); // Obtiene el usuario como objeto
+  // Método para cargar los datos del usuario desde localStorage
+  loadUserData() {
+    const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      const parsedUser = JSON.parse(storedUser); // Convertir el JSON en objeto
-
-      // Verificar si los datos coinciden
-      if (this.email === parsedUser.email && this.password === parsedUser.password) {
-        this.router.navigate(['/profile']); // Si es correcto, redirigir al perfil
-      } else {
-        alert('Credenciales incorrectas');
-      }
-    } else {
-      alert('Cuenta no registrada');
+      const user = JSON.parse(storedUser);
+      this.email = user.email || ''; // Asignar el email si existe
+      // No asignamos la contraseña por razones de seguridad
     }
   }
 
+  togglePasswordVisibility() {
+    this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
+    this.passwordIcon = this.passwordType === 'text' ? 'eye' : 'eye-off';
+  }
+
+  // Método para validar el email
+  validateEmail() {
+    if (!this.email.endsWith('@duocuc.cl')) {
+      this.emailError = 'El correo debe ser de un usuario de Duoc UC';
+      return false; // Retorna false si el email no es válido
+    }
+    this.emailError = ''; // Resetea el mensaje de error si el email es válido
+    return true; // Retorna true si el email es válido
+  }
+
+  onLogin() {
+    if (!this.validateEmail()) {
+      alert(this.emailError); // Muestra el mensaje de error
+      return; // Si el email no es válido, no proceder
+    }
+
+    this.firebaseService.signIn(this.email, this.password)
+      .then(() => {
+        alert('Inicio de sesión exitoso');
+        this.router.navigate(['/profile']);
+      })
+      .catch((error) => {
+        alert('Error en el inicio de sesión: ' + error.message);
+      });
+  }
+
+  onRegister() {
+    this.firebaseService.signUp(this.email, this.password)
+      .then(() => {
+        alert('Registro exitoso');
+        this.router.navigate(['/profile']);
+      })
+      .catch((error) => {
+        alert('Error en el registro: ' + error.message);
+      });
+  }
 }

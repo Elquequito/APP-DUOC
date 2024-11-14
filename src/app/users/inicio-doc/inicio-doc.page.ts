@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FirebaseService } from '../../services/firebase.service'; // Asegúrate de importar el servicio
 
 @Component({
   selector: 'app-inicio-doc',
@@ -13,9 +14,21 @@ export class InicioDocPage implements OnInit {
   passwordIcon: string = 'eye-off'; // Ícono de visibilidad (por defecto 'eye-off')
   emailError: string = ''; // Propiedad para almacenar el mensaje de error del email
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private firebaseService: FirebaseService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.loadUserData(); // Cargar datos del usuario al iniciar
+  }
+
+  // Método para cargar los datos del usuario desde localStorage
+  loadUserData() {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      this.email = user.email || ''; // Asignar el email si existe
+      // No asignamos la contraseña por razones de seguridad
+    }
+  }
 
   // Método para alternar la visibilidad de la contraseña
   togglePasswordVisibility() {
@@ -27,7 +40,7 @@ export class InicioDocPage implements OnInit {
   validateEmail() {
     if (!this.email.endsWith('@profesor.duoc.cl')) {
       this.emailError = 'El correo debe ser de un docente';
-      return;
+      return false; // Retorna false si el email no es válido
     }
 
     // Verificar si el email es válido
@@ -35,31 +48,31 @@ export class InicioDocPage implements OnInit {
     if (storedUser) {
       const user = JSON.parse(storedUser);
       this.emailError = user.email === this.email ? '' : 'Correo no registrado';
+      return this.emailError === ''; // Retorna true si el correo es válido
     } else {
       this.emailError = 'Correo no registrado';
+      return false; // Retorna false si no hay usuario almacenado
     }
   }
 
   // Método para manejar el inicio de sesión
   onLogin() {
     if (this.email && this.password) {
-      this.validateEmail(); // Validar el email antes de continuar
+      const isEmailValid = this.validateEmail(); // Validar el email antes de continuar
 
-      if (this.emailError) {
+      if (!isEmailValid) {
         return; // Si hay un error en el email, no proceder
       }
 
-      // Lógica de autenticación (ejemplo básico)
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        const user = JSON.parse(storedUser);
-        if (user.email === this.email && this.password === user.password) {
+      // Lógica de autenticación con Firebase
+      this.firebaseService.signIn(this.email, this.password)
+        .then(() => {
           alert('Inicio de sesión exitoso');
           this.router.navigate(['/profile-doc']);
-        } else {
-          alert('Credenciales incorrectas');
-        }
-      }
+        })
+        .catch((error) => {
+          alert('Error en el inicio de sesión: ' + error.message);
+        });
     } else {
       alert('Por favor completa todos los campos');
     }
