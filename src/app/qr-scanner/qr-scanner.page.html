@@ -1,41 +1,51 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>Escanear Código QR</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <!-- Mensaje de inicio del escaneo -->
+
+  <!-- Instrucciones para el escaneo -->
   <ion-row>
     <ion-col class="ion-text-center">
-      <p>Apunta la cámara hacia el código QR para escanear y registrar tu asistencia.</p>
+      <p style="font-size: 1.1em; color: #666;">
+        Apunta la cámara hacia el código QR para escanear y registrar tu asistencia.
+      </p>
     </ion-col>
   </ion-row>
 
   <!-- Botón para iniciar el escaneo -->
   <ion-row>
     <ion-col>
-      <ion-button expand="full" (click)="simulateScan()">Iniciar Escaneo</ion-button>
+      <ion-button expand="full" color="tertiary" (click)="startScan()">
+        <ion-icon slot="start" name="qr-code-outline"></ion-icon>
+        Iniciar Escaneo
+      </ion-button>
     </ion-col>
   </ion-row>
 
-  <!-- Mostrar el código escaneado si existe -->
-  <ion-row *ngIf="scannedCode">
+  <!-- Mostrar el código escaneado y mensaje de confirmación -->
+  <ion-row *ngIf="scannedCode" class="ion-margin-top">
     <ion-col>
-      <ion-item color="success">
-        <ion-label>Código escaneado: {{ scannedCode }}</ion-label>
-      </ion-item>
-      <!-- Mensaje de confirmación de asistencia -->
-      <ion-item color="success">
-        <ion-label>Asistencia registrada correctamente</ion-label>
-      </ion-item>
+      <ion-card color="success" class="confirmation-card">
+        <ion-card-header>
+          <ion-card-title>Código escaneado:</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <p style="font-weight: bold;">{{ scannedCode }}</p>
+          <p style="margin-top: 10px; font-size: 1.1em;">
+            Asistencia registrada correctamente
+          </p>
+        </ion-card-content>
+      </ion-card>
     </ion-col>
   </ion-row>
 
-  <!-- Botón de retroceso para volver a la página principal -->
+  <!-- Botón para regresar a la página anterior -->
   <ion-row class="ion-justify-content-end" style="margin-top: auto;">
     <ion-col>
-          <ion-button (click)="goBack()" fill="clear">
+      <ion-button (click)="goBack()" fill="clear">
         <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
         Volver
       </ion-button>

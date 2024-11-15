@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner/ngx'; // Importar QRScanner
 
 @Component({
   selector: 'app-qr-scanner',
@@ -9,15 +10,37 @@ import { Router } from '@angular/router';
 export class QrScannerPage {
   scannedCode: string | null = null; // Variable para almacenar el código escaneado
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private qrScanner: QRScanner // Inyectar el servicio QRScanner
+  ) {}
 
-  // Método para simular el escaneo
-  simulateScan() {
-    // Simulación de código QR escaneado
-    this.scannedCode = "EjemploCódigoQR"; 
+  // Método para iniciar el escaneo
+  startScan() {
+    // Primero, pedimos permiso para usar la cámara
+    this.qrScanner.prepare().then((status: QRScannerStatus) => {
+      if (status.authorized) {
+        // Si el usuario permite el uso de la cámara, iniciamos el escaneo
+        this.qrScanner.show(); // Muestra la cámara
 
-    // Llamar al método para registrar la asistencia
-    this.registerAsistencia(this.scannedCode);
+        // Escuchar el código QR escaneado
+        this.qrScanner.scan().subscribe((text: string) => {
+          this.scannedCode = text; // Guardar el código escaneado
+          this.qrScanner.hide(); // Ocultar la cámara después de escanear
+
+          // Registrar la asistencia
+          this.registerAsistencia(text);
+        });
+      } else {
+        // Si el permiso es denegado, mostramos un mensaje de alerta
+        console.log('Permiso de cámara denegado');
+        alert('No se pudo acceder a la cámara. Asegúrese de tener permisos.');
+      }
+    }).catch((e: any) => {
+      // Manejo de errores en caso de fallos al acceder a la cámara
+      console.log('Error al acceder a la cámara', e);
+      alert('Ocurrió un error al intentar acceder a la cámara.');
+    });
   }
 
   // Método para registrar la asistencia
@@ -45,7 +68,8 @@ export class QrScannerPage {
     asistenciaArray.push(newAsistencia);
     localStorage.setItem('asistencia', JSON.stringify(asistenciaArray)); // Guardar en localStorage
 
-    alert('Asistencia registrada exitosamente: ' + formattedDate);
+    // Mostrar un mensaje de confirmación al usuario
+    alert(`Asistencia Confirmada: ${formattedDate}`);
   }
 
   // Método para formatear la fecha

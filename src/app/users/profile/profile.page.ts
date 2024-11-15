@@ -51,8 +51,8 @@ export class ProfilePage implements OnInit {
     });
   }
 
-  // Método para redirigir al escáner QR
   goToQrScanner() {
+    console.log('Navigating to QR Scanner');
     this.router.navigate(['/qr-scanner']);
-  }
+  }  
 }
