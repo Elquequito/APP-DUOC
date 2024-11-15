@@ -17,52 +17,32 @@
       <img 
         [src]="user.photoURL || 'assets/usuario-png.png'" 
         alt="Foto de perfil" 
-        style="width: 100px; border-radius: 50%;"
-      >
-      <h2 style="color: #fbb41c;">{{ user.displayName }}</h2>
-      <h3 style="color: #8c8c8c;">{{ user.career }}</h3>
+        style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;">
+    </div>
+
+    <!-- Mensaje de bienvenida debajo de la foto -->
+    <div style="text-align: center; color: #8c8c8c; margin-bottom: 20px;">
+      <p><strong>Bienvenido Docente</strong></p>
     </div>
     
-    <!-- Contenedor para mostrar información registrada -->
+    <!-- Contenedor para mostrar correo registrado -->
     <ion-card>
       <ion-card-content>
         <ion-list>
           <ion-item>
             <ion-label>
               <strong>Correo: </strong> 
-              <span style="color: #fbb41c;">{{ user.email }}</span>
+              <span style="color: #fbb41c;">
+                {{ user.email || 'Correo no disponible' }}
+              </span>
             </ion-label>
           </ion-item>
-
-          <ion-item>
-            <ion-label><strong>Nombre: </strong></ion-label>
-            <ng-container *ngIf="!isEditingName; else editNameTemplate">
-              <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                <span style="color: #fbb41c;">{{ user.displayName }}</span>
-                <ion-button *ngIf="!nameEdited" (click)="enableEditName()" color="light">Editar</ion-button>
-              </div>
-            </ng-container>
-            <ng-template #editNameTemplate>
-              <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                <ion-input 
-                  [(ngModel)]="editableName" 
-                  placeholder="Ingresa tu nombre y apellido" 
-                  class="editable-input"
-                ></ion-input>
-                <ion-button (click)="guardarNombre()" color="primary">Guardar</ion-button>
-              </div>
-            </ng-template>
-          </ion-item>
         </ion-list>
-
-        <!-- Mensaje de advertencia -->
-        <div *ngIf="isEditingName" style="text-align: center; color: red; margin: 10px;">
-          !!!RECUERDA!!! solo puedes cambiar tu nombre una vez
-        </div>
       </ion-card-content>
     </ion-card>
 
-    <div style="text-align: center; margin: 10px">
+    <!-- Botón para generar QR -->
+    <div style="text-align: center; margin: 20px;">
       <ion-button (click)="goToQrGenerator()" color="dark">Generar QR</ion-button>
     </div>
 
@@ -81,14 +61,16 @@
           </ion-item>
         </ion-list>
 
-        <div *ngIf="asistencia.length === 0" style="text-align: center; color: #8c8c8c;">
+        <!-- Mensaje si no hay registros de asistencia -->
+        <div *ngIf="asistencia.length === 0" style="text-align: center; color: #8c8c8c; padding: 10px;">
           No hay registros de asistencia.
         </div>
       </ion-card-content>
     </ion-card>
   </div>
-  
-  <div *ngIf="!user">
+
+  <!-- Mensaje si no se ha encontrado información del usuario -->
+  <div *ngIf="!user" style="text-align: center; margin-top: 20px; color: #8c8c8c;">
     <p>No se ha encontrado información del usuario.</p>
   </div>
 </ion-content>

@@ -8,24 +8,28 @@ import { FirebaseService } from '../../services/firebase.service';
   styleUrls: ['./sign-up.page.scss'],
 })
 export class SignUpPage implements OnInit {
-  email: string = ''; // Propiedad para almacenar el email
-  password: string = ''; // Propiedad para almacenar la contraseña
-  passwordType: string = 'password'; // Tipo de campo de contraseña (por defecto 'password')
-  passwordIcon: string = 'eye-off'; // Ícono de visibilidad (por defecto 'eye-off')
-  emailError: string = ''; // Propiedad para almacenar el mensaje de error del email
-  isEmailValid: boolean = false; // Propiedad para verificar la validez del email
+  email: string = ''; // Email del usuario
+  password: string = ''; // Contraseña
+  firstName: string = ''; // Nombre
+  lastName: string = ''; // Apellido
+  passwordType: string = 'password'; // Tipo del campo contraseña
+  passwordIcon: string = 'eye-off'; // Icono de visibilidad
+  emailError: string = ''; // Error de email
+  passwordError: string = ''; // Error de contraseña
+  isEmailValid: boolean = false; // Estado de validez del email
+  isPasswordValid: boolean = false; // Estado de validez de la contraseña
 
   constructor(private router: Router, private firebaseService: FirebaseService) {}
 
   ngOnInit() {}
 
-  // Método para alternar la visibilidad de la contraseña
+  // Alterna la visibilidad de la contraseña
   togglePasswordVisibility() {
     this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
     this.passwordIcon = this.passwordType === 'text' ? 'eye' : 'eye-off';
   }
 
-  // Método para verificar el formato del email
+  // Verifica el formato del email
   validateEmail() {
     if (this.email.endsWith('@duocuc.cl') || this.email.endsWith('@profesor.duoc.cl')) {
       this.emailError = '';
@@ -36,20 +40,60 @@ export class SignUpPage implements OnInit {
     }
   }
 
-  // Método para manejar el registro en sign-up
+  // Verifica la validez de la contraseña (mínimo 6 caracteres)
+  validatePassword() {
+    if (this.password.length < 6) {
+      this.passwordError = 'La contraseña debe tener al menos 6 caracteres';
+      this.isPasswordValid = false;
+    } else {
+      this.passwordError = '';
+      this.isPasswordValid = true;
+    }
+  }
+
+  // Maneja el proceso de registro
   onRegister() {
     this.validateEmail();
-
-    if (!this.isEmailValid) {
-      alert('Por favor ingresa un email válido de DuocUC o del profesor');
+    this.validatePassword();
+  
+    if (!this.isEmailValid || !this.isPasswordValid) {
+      alert('Por favor ingresa un email válido de DuocUC o del profesor y una contraseña válida');
       return;
     }
-
-    if (this.email && this.password) {
+  
+    if (this.firstName && this.lastName && this.email && this.password) {
       this.firebaseService.signUp(this.email, this.password)
-        .then(() => {
-          alert('Registro exitoso');
-          this.router.navigate(['/sign-in']);
+        .then((userCredential) => {
+          const user = userCredential.user;
+          if (user) {
+            // Guardar los datos en localStorage
+            const userData = {
+              email: this.email,
+              firstName: this.firstName,
+              lastName: this.lastName,
+              uid: user.uid // UID del usuario registrado
+            };
+            localStorage.setItem('user', JSON.stringify(userData));
+  
+            // Guardar el nombre y apellido en Firebase
+            const userInfo = {
+              firstName: this.firstName,
+              lastName: this.lastName,
+              email: this.email
+            };
+  
+            this.firebaseService.saveUserInfo(user.uid, userInfo)
+              .then(() => {
+                alert('Registro exitoso');
+                this.router.navigate(['/sign-in']);
+              })
+              .catch((error) => {
+                alert('Error al guardar información del usuario: ' + error.message);
+                console.error('Error:', error);
+              });
+          } else {
+            console.error('No se pudo obtener el usuario');
+          }
         })
         .catch((error) => {
           alert('Error en el registro: ' + error.message);
@@ -58,5 +102,10 @@ export class SignUpPage implements OnInit {
     } else {
       alert('Por favor completa todos los campos');
     }
-  }
+  }  
+
+  isFormValid(): boolean {
+    // Verifica que todos los campos necesarios no sean vacíos o nulos
+    return this.isEmailValid && this.isPasswordValid && this.firstName.trim() !== '' && this.lastName.trim() !== '' && this.email.trim() !== '' && this.password.trim() !== '';
+  }  
 }

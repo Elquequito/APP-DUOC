@@ -1,15 +1,14 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
-
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
-// ======= FIREBASE =======
+// Firebase imports
 import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFireAuthModule } from '@angular/fire/compat/auth'; // Importar el módulo de autenticación
+import { AngularFireAuthModule } from '@angular/fire/compat/auth'; // Si usas autenticación
 import { environment } from 'src/environments/environment';
 
 @NgModule({
@@ -18,8 +17,8 @@ import { environment } from 'src/environments/environment';
     BrowserModule, 
     IonicModule.forRoot(),
     AppRoutingModule,
-    AngularFireModule.initializeApp(environment.firebaseConfig), // Asegúrate de que esté usando firebaseConfig
-    AngularFireAuthModule // Agregar el módulo de autenticación
+    AngularFireModule.initializeApp(environment.firebaseConfig), // Usando la configuración de Firebase
+    AngularFireAuthModule // Solo si usas autenticación con Firebase
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

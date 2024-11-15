@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title class="subtitulo ion-text-wrap">Perfil</ion-title>
+    <ion-title class="subtitulo ion-text-wrap">Perfil Estudiante</ion-title>
 
     <!-- Botón para cerrar sesión a la derecha -->
     <ion-buttons slot="end">
@@ -20,7 +20,10 @@
         style="width: 100px; border-radius: 50%;"
       >
       <h2 style="color: #fbb41c;">{{ user.displayName }}</h2>
-      <h3 style="color: #8c8c8c;">{{ user.career }}</h3>
+      <h3 style="color: #fbb41c;">{{ user.career }}</h3>
+      
+      <!-- Mensaje de bienvenida -->
+      <p style="color: #fbb41c; font-size: 16px;"><strong>Bienvenido Alumno</strong></p>
     </div>
 
     <!-- Contenedor para mostrar información registrada -->
@@ -33,54 +36,7 @@
               <span style="color: #fbb41c;">{{ user.email }}</span>
             </ion-label>
           </ion-item>
-
-          <!-- Sección de Nombre -->
-          <ion-item>
-            <ion-label><strong>Nombre: </strong></ion-label>
-            <ng-container *ngIf="!isEditingName; else editNameTemplate">
-              <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                <span style="color: #fbb41c;">{{ user.displayName }}</span>
-                <ion-button *ngIf="!nameEdited" (click)="enableEditName()" color="light">Editar</ion-button>
-              </div>
-            </ng-container>
-            <ng-template #editNameTemplate>
-              <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                <ion-input 
-                  [(ngModel)]="editableName" 
-                  placeholder="Ingresa tu nombre y apellido" 
-                  class="editable-input"
-                ></ion-input>
-                <ion-button (click)="guardarNombre()" color="primary">Guardar</ion-button>
-              </div>
-            </ng-template>
-          </ion-item>
-
-          <!-- Sección de Sección -->
-          <ion-item>
-            <ion-label><strong>Sección: </strong></ion-label>
-            <ng-container *ngIf="!isEditingSection; else editSectionTemplate">
-              <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                <span style="color: #fbb41c;">{{ user.section }}</span>
-                <ion-button *ngIf="!sectionEdited" (click)="enableEditSection()" color="light">Editar</ion-button>
-              </div>
-            </ng-container>
-            <ng-template #editSectionTemplate>
-              <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                <ion-input 
-                  [(ngModel)]="editableSection" 
-                  placeholder="Ingresa tu sección" 
-                  class="editable-input"
-                ></ion-input>
-                <ion-button (click)="guardarSection()" color="primary">Guardar</ion-button>
-              </div>
-            </ng-template>
-          </ion-item>
         </ion-list>
-
-        <!-- Mensaje de advertencia -->
-        <div *ngIf="isEditingName || isEditingSection" style="text-align: center; color: red; margin: 10px;">
-          !!!RECUERDA!!! solo puedes cambiar tu nombre y sección una vez
-        </div>
       </ion-card-content>
     </ion-card>
 

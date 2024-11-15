@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-profile',
@@ -8,31 +10,32 @@ import { Router } from '@angular/router';
 })
 export class ProfilePage implements OnInit {
   user: any = {}; // Datos del usuario
-  editableName: string = ''; // Propiedad para almacenar el nombre editable
-  isEditingName: boolean = false; // Estado para saber si se está editando el nombre
-  nameEdited: boolean = false; // Propiedad para controlar si el nombre ha sido editado
-  editableSection: string = ''; // Propiedad para almacenar la sección editable
-  isEditingSection: boolean = false; // Estado para saber si se está editando la sección
-  sectionEdited: boolean = false; // Propiedad para controlar si la sección ha sido editada
   asistencia: any[] = []; // Propiedad para almacenar la asistencia
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private afAuth: AngularFireAuth,
+    private firestore: AngularFirestore
+  ) {}
 
   ngOnInit() {
     this.loadUserData(); // Cargar datos del usuario al iniciar
     this.loadAsistencia(); // Cargar asistencia al iniciar
   }
 
-  // Cargar la información del usuario desde localStorage
+  // Cargar la información del usuario desde Firebase
   loadUserData() {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      this.user = JSON.parse(storedUser);
-      this.editableName = this.user.displayName || ''; // Cargar el nombre actual
-      this.editableSection = this.user.section || ''; // Cargar la sección actual
-      this.nameEdited = !!this.user.displayName; // Verifica si el nombre ha sido editado
-      this.sectionEdited = !!this.user.section; // Verifica si la sección ha sido editada
-    }
+    this.afAuth.authState.subscribe((firebaseUser) => {
+      if (firebaseUser) {
+        // Obtener datos del usuario desde Firestore usando el UID
+        this.firestore.collection('users').doc(firebaseUser.uid).valueChanges().subscribe((userData: any) => {
+          this.user = {
+            ...userData,
+            email: firebaseUser.email, // Asigna el correo de Firebase
+          };
+        });
+      }
+    });
   }
 
   // Cargar la asistencia desde localStorage
@@ -41,52 +44,15 @@ export class ProfilePage implements OnInit {
     this.asistencia = storedAsistencia ? JSON.parse(storedAsistencia) : [];
   }
 
-  // Habilitar la edición del nombre
-  enableEditName() {
-    this.editableName = this.user.displayName; // Cargar el nombre actual en editableName
-    this.isEditingName = true; // Cambiar el estado a edición
-  }
-
-  // Guardar el nombre en localStorage
-  guardarNombre() {
-    if (this.editableName.trim()) {
-      this.user.displayName = this.editableName; // Actualizar el nombre en el objeto usuario
-      localStorage.setItem('user', JSON.stringify(this.user)); // Guardar el usuario actualizado en localStorage
-      alert('Nombre guardado exitosamente');
-      this.isEditingName = false; // Salir del modo de edición
-      this.nameEdited = true; // Marcar que el nombre ha sido editado
-    } else {
-      alert('Por favor ingresa un nombre válido.');
-    }
-  }
-
-  // Habilitar la edición de la sección
-  enableEditSection() {
-    this.editableSection = this.user.section; // Cargar la sección actual en editableSection
-    this.isEditingSection = true; // Cambiar el estado a edición
-  }
-
-  // Guardar la sección en localStorage
-  guardarSection() {
-    if (this.editableSection.trim()) {
-      this.user.section = this.editableSection; // Actualizar la sección en el objeto usuario
-      localStorage.setItem('user', JSON.stringify(this.user)); // Guardar el usuario actualizado en localStorage
-      alert('Sección guardada exitosamente');
-      this.isEditingSection = false; // Salir del modo de edición
-      this.sectionEdited = true; // Marcar que la sección ha sido editada
-    } else {
-      alert('Por favor ingresa una sección válida.');
-    }
-  }
-
   // Método para cerrar sesión
   salir() {
-    localStorage.removeItem('user'); // Remover información del usuario
-    this.router.navigate(['/sign-in']); // Redirigir a la página de inicio de sesión
+    this.afAuth.signOut().then(() => {
+      this.router.navigate(['/sign-in']);
+    });
   }
 
   // Método para redirigir al escáner QR
   goToQrScanner() {
-    this.router.navigate(['/qr-scanner']); // Redirigir al escáner QR
+    this.router.navigate(['/qr-scanner']);
   }
 }

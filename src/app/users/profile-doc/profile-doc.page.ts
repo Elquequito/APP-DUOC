@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 interface Asistencia {
   fecha: string;
@@ -13,45 +15,70 @@ interface Asistencia {
   styleUrls: ['./profile-doc.page.scss'],
 })
 export class ProfileDocPage implements OnInit {
-  user: any = {};
-  asistencia: Asistencia[] = [];
-  editableName: string = '';
-  isEditingName: boolean = false;
-  nameEdited: boolean = false;
+  user: any = {}; // Datos del usuario
+  asistencia: Asistencia[] = []; // Datos de la asistencia
+  isProfessor: boolean = false; // Para verificar si el usuario es profesor
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private afAuth: AngularFireAuth,
+    private firestore: AngularFirestore
+  ) {}
 
   ngOnInit() {
-    this.loadUserData();
+    this.loadUserData(); // Cargar datos del usuario al iniciar
     this.loadAsistencia(); // Cargar asistencia al iniciar
   }
 
   loadUserData() {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      this.user = JSON.parse(storedUser);
-      this.editableName = this.user.displayName || '';
-      this.nameEdited = !!this.user.displayName;
-    }
+    this.afAuth.authState.subscribe((firebaseUser) => {
+      if (firebaseUser) {
+        // Obtener datos del usuario desde Firestore usando el UID
+        this.firestore.collection('users').doc(firebaseUser.uid).valueChanges().subscribe((userData: any) => {
+          this.user = {
+            ...userData,
+            email: firebaseUser.email, // Asigna el correo de Firebase
+          };
+
+          // Verificar si el correo del usuario termina con '@profesor.duoc.cl'
+          if (this.user.email && this.user.email.endsWith('@profesor.duoc.cl')) {
+            this.isProfessor = true; // El usuario es profesor
+          } else {
+            this.isProfessor = false; // El usuario no es profesor
+            alert('Acceso restringido a usuarios con correo institucional.');
+            this.router.navigate(['/sign-in']); // Redirigir si no es profesor
+          }
+
+          // Verificar si el usuario tiene un displayName, si no lo tiene, usar su correo como nombre
+          if (!this.user.displayName) {
+            this.user.displayName = this.user.email.split('@')[0]; // Usar el correo antes del '@' como nombre por defecto
+          }
+
+          // Guardar en localStorage para persistencia
+          localStorage.setItem('user', JSON.stringify(this.user));
+        });
+      } else {
+        // Si no hay usuario en Firebase, cargar desde localStorage
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          this.user = JSON.parse(storedUser);
+        }
+      }
+    });
   }
 
   loadAsistencia() {
-    const storedAsistencia = localStorage.getItem('asistencia');
-    const asistenciaArray = storedAsistencia ? JSON.parse(storedAsistencia) : [];
+    if (this.isProfessor) {
+      const storedAsistencia = localStorage.getItem('asistencia');
+      const asistenciaArray = storedAsistencia ? JSON.parse(storedAsistencia) : [];
 
-    // Obtener el nombre desde localStorage
-    const storedUser = localStorage.getItem('user'); // Obtener el mismo usuario
-    const userProfile = storedUser ? JSON.parse(storedUser) : {};
-    
-    console.log('Asistencia:', asistenciaArray);
-    console.log('Perfil:', userProfile);
-
-    // Mapear asistencia para incluir el nombre del usuario que escaneó
-    this.asistencia = asistenciaArray.map((item: { fecha: string; codigo: string }) => ({
-      fecha: this.formatFecha(item.fecha), // Formatear la fecha
-      codigo: item.codigo,
-      nombre: userProfile.displayName || 'Desconocido' // Usar el nombre del perfil
-    }));
+      // Mapear asistencia para incluir el nombre del usuario que escaneó
+      this.asistencia = asistenciaArray.map((item: { fecha: string; codigo: string }) => ({
+        fecha: this.formatFecha(item.fecha), // Formatear la fecha
+        codigo: item.codigo,
+        nombre: this.user.displayName || 'Desconocido' // Mostrar nombre completo del docente o "Desconocido"
+      }));
+    }
   }
 
   // Método para formatear la fecha
@@ -60,29 +87,14 @@ export class ProfileDocPage implements OnInit {
     return `${dateParts[0]} - ${dateParts[1]}`; // Retornar solo la fecha y la hora
   }
 
-  enableEditName() {
-    this.editableName = this.user.displayName;
-    this.isEditingName = true;
-  }
-
-  guardarNombre() {
-    if (this.editableName.trim()) {
-      this.user.displayName = this.editableName;
-      localStorage.setItem('user', JSON.stringify(this.user));
-      alert('Nombre guardado exitosamente');
-      this.isEditingName = false;
-      this.nameEdited = true;
-    } else {
-      alert('Por favor ingresa un nombre válido.');
-    }
-  }
-
   salir() {
     localStorage.removeItem('user');
-    this.router.navigate(['/sign-in']);
+    this.afAuth.signOut().then(() => {
+      this.router.navigate(['/sign-in']);
+    });
   }
 
   goToQrGenerator() {
     this.router.navigate(['/generar-qr']); // Usa '/generar-qr' si esta es la ruta correcta
-  } 
+  }
 }
